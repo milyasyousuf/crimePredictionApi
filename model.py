@@ -1,58 +1,27 @@
-import json
+from sklearn.externals import joblib
+#import databaseModule as db
 import pandas as pd
+import numpy as np
+import json,collections
+import simplejson as json
+loaded_model = joblib.load("joblib.pkl")
 
-def convertJsonToCSV(filename):
-    anyIdentVehical = []
-    crimeDate = []
-    casualties = []
-    crimeLng = []
-    crimeLtd = []
-    crimeLocation = []
-    crimeVictim = []
-    crimeVehicle = []
-    noOfCriminal = []
-    typeOfCrime = []
-    Vsr = []
-    with open(filename, 'r') as f:
-        array = json.load(f)
-        for i in array['Questionnaires']:
-            anyIdentVehical.append(array['Questionnaires'][i][' Any Identification of Vehicle'][0])
-            crimeDate.append(array['Questionnaires'][i]['Crime Date'][0])
-            casualties.append(array['Questionnaires'][i]['Casualties'][0])
-            if('Crime Location' in array['Questionnaires'][i]):
-                crimeLng.append(array['Questionnaires'][i]['Crime Location'][0])
-                crimeLtd.append(array['Questionnaires'][i]['Crime Location'][1])
-                crimeLocation.append(array['Questionnaires'][i]['Crime Location'][2])
-            else:
-                crimeLng.append("  ")
-                crimeLtd.append("  ")
-                crimeLocation.append(" ")
-            crimeVictim.append(array['Questionnaires'][i]['Crime Victim '][0])
-            if('Criminal Vehicle' in array['Questionnaires'][i]):
-                crimeVehicle.append(array['Questionnaires'][i]['Criminal Vehicle'][0])
-            else:
-                crimeVehicle.append(" ")
-            noOfCriminal.append(array['Questionnaires'][i]['No of Criminal'][0])
-            typeOfCrime.append(array['Questionnaires'][i]['Type Of Crime'][0])
-            if ('Vehicle snaching Related' in array['Questionnaires'][i]):
-                Vsr.append(array['Questionnaires'][i]['Vehicle snaching Related'][0])
-            else:
-                Vsr.append(" ")
-            #break
+#'Mobile snatching':1,'Robbery':2,'Kidnapping':3,'Blast':4,'Vehicle Snatching':5,"Sexual harassment:6,'Murder':7
+def init(data):
+    data['crimeDate'] = pd.to_datetime(data['crimeDate'], format='%d : %m : %Y').dt.dayofweek
+    x = data.as_matrix()
+    print(loaded_model.predict(x))
 
-    df = pd.DataFrame()
-    df['identificationOfVehicle'] = anyIdentVehical
-    df['crimeDate']= crimeDate
-    df['casualties'] = casualties
-    df['crimeLng'] = crimeLng
-    df['crimeLtd'] = crimeLtd
-    df['crimeLocation'] = crimeLocation
-    df['crimeVictim'] = crimeVictim
-    df['crimeVehicle'] = crimeVehicle
+    
+    #print(a.dtype())
+    #df = pd.read_json(test)
+    #print (elevations['crimeDate'])
+    #return df
 
-    df['noOfCriminal'] = noOfCriminal
-    df['typeOfCrime'] = typeOfCrime
-    df['Vsr'] = Vsr
-    df.to_csv("final.csv")
+crimeDate = "28 : 7 : 2017"
+crimeLng = "67.0689859"
+crimeLtd = "24.810707100000002"
+df =pd.DataFrame({"crimeDate":[crimeDate],"crimeLng":[float(crimeLng)],"crimeLtd":[float(crimeLtd)]})
+    
 
-convertJsonToCSV("dataset.json")
+init(df)
