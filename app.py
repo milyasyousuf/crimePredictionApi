@@ -7,7 +7,7 @@ import pandas as pd
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-loaded_model = joblib.load(APP_ROOT+"/joblib.pkl")
+loaded_model = joblib.load(APP_ROOT+"/crimeModel.pkl")
 
 #localhost:8000/getCrimeType?cDate=28%20:%207%20:%202017&cLtd=67.0689859&cLng=24.810707100000002
 
